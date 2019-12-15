@@ -1,24 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Getting Started Extension's Popup</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-      }
-    </style>
-    <script src="js/vendor.js"></script>
-  </head>
-  <body>
-    <ul style="min-width: 700px;">
-    <li>Current URL: <span id="url"></span></li>
-    <li>Current Time: <span id="time"></span></li>
-    </ul>
-    <button id="countUp">count up</button>
-    <button id="changeBackground">change background</button>
-    <script src="js/popup.js"></script>
-  </body>
-</html>
+    <head>
+        <title>Media Bias/Fact Check Popup</title>
+        <style>
+            html {
+                width: 400px;
+            }
 
+            h1 {
+                margin-top: 0;
+            }
+
+            #factual {
+                font-weight: bold;
+            }
+
+            center-text {
+                text-align: center !important;
+            }
+            
+            h1 > a {
+              text-decoration: none;
+            }
+        </style>
+        <link rel="stylesheet" href="css/facebook.css" />
+        <script src="popup.bundle.js"></script>
+    </head>
+    <body>
+        <h1 style="text-align: center" id="bias-class" >
+          <a href="#" class="href" id="bias" ></a>
+        </h1>
+        <p id="description"></p>
+        <p id="factualParagraph">Factual reporting: <span id="factual"></span></p>
+        <div id="more-info"></div>
+    </body>
+</html>

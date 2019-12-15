@@ -1,33 +1,25 @@
 {
-  "manifest_version": 2,
-
-  "name": "Chrome Extension TypeScript Starter",
-  "description": "Chrome Extension, TypeScript, Visual Studio Code",
+  "name": "Chrome Extension Monitor",
+  "description": "Chrome Extension Monitor",
   "version": "1.0",
-
+  "short_name": "extmonitor",
+  "author": "Mike Crowe",
+  "manifest_version": 2,
   "options_ui": {
     "page": "options.html",
     "chrome_style": true
   },
-
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
-
-  "content_scripts": [
-      {
-          "matches": ["<all_urls>"],
-          "js": ["js/vendor.js", "js/content_script.js"]
-      }
-  ],
-
   "background": {
-    "scripts": ["js/vendor.js", "js/background.js"]
+    "page": "background.html"
   },
-
-  "permissions": [
-    "storage",
-    "<all_urls>"
-  ]
+  "permissions": ["storage"],
+  "web_accessible_resources": ["images/*", "css/*", "icons/*"]
 }

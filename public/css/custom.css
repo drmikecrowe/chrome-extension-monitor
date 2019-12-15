@@ -1,0 +1,9 @@
+.mainview {
+  min-height: 500px;
+}
+.content > div {
+  padding-right: 30px;
+}
+.chrome-bootstrap .checkbox {
+  margin: 0.25em 0 0 0;
+}

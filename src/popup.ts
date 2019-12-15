@@ -1,5 +1,6 @@
-import * as moment from 'moment';
-import * as $ from 'jquery';
+import * as $ from "jquery";
+import debug from "debug";
+const log = debug("mbfc:background");
 
 let count = 0;
 
@@ -10,23 +11,20 @@ $(function() {
   };
 
   chrome.tabs.query(queryInfo, function(tabs) {
-    $('#url').text(tabs[0].url);
-    $('#time').text(moment().format('YYYY-MM-DD HH:mm:ss'));
+    $("#url").text(tabs[0].url);
   });
 
-  chrome.browserAction.setBadgeText({text: count.toString()});
-  $('#countUp').click(()=>{
-    chrome.browserAction.setBadgeText({text: (++count).toString()});
-  });
+  chrome.browserAction.setBadgeText({ text: (++count).toString() });
 
-  $('#changeBackground').click(()=>{
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        color: '#555555'
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.sendMessage(
+      tabs[0].id,
+      {
+        color: "#555555"
       },
       function(msg) {
-        console.log("result message:", msg);
-      });
-    });
+        log("result message:", msg);
+      }
+    );
   });
 });
