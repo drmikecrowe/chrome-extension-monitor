@@ -1,8 +1,11 @@
 import debug from "debug";
-import { isDevMode } from "./utils";
 import { ReleaseNotes } from "./ReleaseNotes";
 import { Documentation } from "./Documentation";
-isDevMode();
+
+require("chrome-options/dist/main.min.js");
+
+require("./custom.css");
+
 const log = debug("mbfc:options");
 
 const setup = () => {
@@ -16,14 +19,13 @@ const setup = () => {
 
   chromeOptions.opts.title = "Section";
 
-  chromeOptions.opts.about =
-    '<p>This extension is open-source, and is based here: <a href="https://github.com/drmikecrowe/chrome-extension-monitor">Github Project Page</a></p>';
+  chromeOptions.opts.about = '<p>This extension is open-source, and is based here: <a href="https://github.com/drmikecrowe/chrome-extension-monitor">Github Project Page</a></p>';
 
   chromeOptions.addTab("Documentation", [
     {
       type: "html",
-      html: Documentation
-    }
+      html: Documentation,
+    },
   ]);
 
   chromeOptions.addTab("Extensions", "", [
@@ -35,9 +37,9 @@ const setup = () => {
       sortable: true,
       fields: [
         { type: "text", name: "id", desc: "Extension ID (32-letters)" },
-        { type: "text", name: "name", desc: "Friendly display name" }
-      ]
-    }
+        { type: "text", name: "name", desc: "Friendly display name" },
+      ],
+    },
   ]);
 
   chromeOptions.addTab("Notifications", "", [
@@ -47,7 +49,7 @@ const setup = () => {
       desc: "",
       type: "select",
       options: ["15 minutes", "1 hour", "24 hours"],
-      default: "15 minutes"
+      default: "15 minutes",
     },
     { type: "h3", desc: "Badge Notifications" },
     {
@@ -57,8 +59,8 @@ const setup = () => {
       options: [
         { name: "new_rating", desc: "New Rating" },
         { name: "new_review", desc: "New Review", default: true },
-        { name: "new_support", desc: "New Support Entry", default: true }
-      ]
+        { name: "new_support", desc: "New Support Entry", default: true },
+      ],
     },
     { type: "h3", desc: "Desktop Notifications" },
     {
@@ -68,16 +70,16 @@ const setup = () => {
       options: [
         { name: "new_rating", desc: "New Rating" },
         { name: "new_review", desc: "New Review", default: true },
-        { name: "new_support", desc: "New Support Entry", default: true }
-      ]
-    }
+        { name: "new_support", desc: "New Support Entry", default: true },
+      ],
+    },
   ]);
 
   chromeOptions.addTab("Release Notes", [
     {
       type: "html",
-      html: ReleaseNotes
-    }
+      html: ReleaseNotes,
+    },
   ]);
 
   chromeOptions.addTab("Donate", [
@@ -89,8 +91,8 @@ const setup = () => {
         "<ul>" +
         '<li>Via <a href="https://paypal.me/drmikecrowe" target="_blank">PayPal</a></li>' +
         '<li>Via <a href="https://www.patreon.com/solvedbymike" target="_blank">Patreon</a></li>' +
-        "</ul>  "
-    }
+        "</ul>  ",
+    },
   ]);
 };
 

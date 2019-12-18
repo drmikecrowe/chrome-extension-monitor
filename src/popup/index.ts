@@ -1,11 +1,20 @@
 import Vue from "vue";
-import AppComponent from "./App/App.vue";
+import Popup from "./popup.vue";
+import VueTailwind from "vue-tailwind";
 
-Vue.component("app-component", AppComponent);
+import MyOwnTheme from "./theme";
+
+const styles = require("./popup.css");
+
+Vue.use(VueTailwind, {
+  theme: MyOwnTheme,
+});
+
+Vue.component("popup", Popup);
 
 new Vue({
   el: "#app",
   render: createElement => {
-    return createElement(AppComponent);
-  }
+    return createElement(Popup);
+  },
 });
