@@ -12,21 +12,22 @@ import { IStat, IScanResults } from "@/types";
 
 const log = debug("mbfc:background");
 
-export const scan = async (id: string, name: string, lastStats: IStat): Promise<IScanResults> => {
+export const scan = async (id: string, name: string, url: string, lastStats: IStat): Promise<IScanResults> => {
   const baseUrl = "https://us-central1-chrome-extension-monitor.cloudfunctions.net/chromeFeedback";
 
   defaults(lastStats, { reviews: 0, issues: 0 });
   const { reviews, issues } = lastStats;
-  const url = `${baseUrl}?id=${id}&reviews=${reviews || 0}&issues=${issues || 0}`;
-  log(`Polling ${url}`);
+  const scanUrl = `${baseUrl}?id=${id}&reviews=${reviews || 0}&issues=${issues || 0}`;
+  log(`Polling ${scanUrl}`);
   try {
-    const res = await axios.get(url);
+    const res = await axios.get(scanUrl);
     if (res.status === 200) {
       const data: IScanResults = res.data;
       const { reviews, issues, last } = data;
       const results: IScanResults = {
         id,
         name,
+        url,
         issues,
         reviews,
         last,
@@ -43,6 +44,7 @@ export const scan = async (id: string, name: string, lastStats: IStat): Promise<
   return {
     id,
     name,
+    url,
     issues: [],
     reviews: [],
     last: { issues: now, reviews: now },

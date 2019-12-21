@@ -7,12 +7,12 @@ const webpack = require("webpack"),
     PORT: process.env.PORT || 3000,
   },
   CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
-  CopyPlugin = require("copy-webpack-plugin"), // REVIEW
+  CopyWepbackPlugin = require("copy-webpack-plugin"), // REVIEW
   HtmlWebpackPlugin = require("html-webpack-plugin"),
   WriteFilePlugin = require("write-file-webpack-plugin"),
   ExtensionReloader = require("webpack-extension-reloader"),
-  VueLoaderPlugin = require("vue-loader").VueLoaderPlugin,
-  WebpackMessages = require("webpack-messages");
+  TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin"),
+  VueLoaderPlugin = require("vue-loader").VueLoaderPlugin;
 
 var fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"];
 
@@ -64,15 +64,16 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".vue"],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: join(__dirname, "../tsconfig.json"),
+        extensions: [".ts", ".tsx", ".js", ".vue"],
+      }),
+    ],
   },
   plugins: [
     require("tailwindcss"),
-    new WebpackMessages({
-      name: "client",
-      logger: str => console.log(`>> ${str}`),
-    }),
     new VueLoaderPlugin(),
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: process.env.npm_package_name,
       meta: {
@@ -99,10 +100,8 @@ module.exports = {
       chunks: ["options"],
       hash: true,
     }),
-    new CopyPlugin([{ from: ".", to: buildDir }], { context: "public" }),
-    // new CopyPlugin([{ from: "dist", to: join(buildDir, "options") }], { context: join(__dirname, "../node_modules/chrome-options") }),
-    // new CopyPlugin([{ from: "dist", to: join(buildDir, "css/tailwindcss") }], { context: join(__dirname, "../node_modules/tailwindcsss") }),
-    new CopyPlugin([
+    new CopyWepbackPlugin([{ from: ".", to: buildDir }], { context: "public" }),
+    new CopyWepbackPlugin([
       {
         from: "src/manifest.json",
         to: buildDir,
@@ -119,4 +118,5 @@ module.exports = {
       },
     ]),
   ],
+  stats: "minimal",
 };

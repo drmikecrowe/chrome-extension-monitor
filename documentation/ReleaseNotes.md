@@ -1,1 +1,3 @@
-# Chrome Extension Monitor Release Notes
+# Version 1.0
+
+Initial Release

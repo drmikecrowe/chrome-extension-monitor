@@ -3,14 +3,15 @@ export interface IAuthor {
   image?: string;
 }
 
-export interface IReview {
+export interface IIssue {
   author: IAuthor;
   comment: string;
-  rating: number;
+  title: string;
+  type: string;
   createdAt: number;
 }
 
-export interface IIssue {
+export interface IReview {
   author: IAuthor;
   rating: number;
   createdAt: number;
@@ -28,7 +29,14 @@ export type IStats = Record<string, IStat>;
 export interface IScanResults {
   id: string;
   name: string;
+  url: string;
   reviews: IReview[];
   issues: IIssue[];
   last: IStat;
+}
+
+export interface ICurrent {
+  id: string;
+  name: string;
+  url: string;
 }

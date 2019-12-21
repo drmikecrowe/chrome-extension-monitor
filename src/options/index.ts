@@ -15,7 +15,7 @@ const setup = () => {
 
   log(`Configuring options`);
 
-  chromeOptions.opts.autoSave = false;
+  chromeOptions.opts.autoSave = true;
 
   chromeOptions.opts.title = "Section";
 
@@ -34,10 +34,11 @@ const setup = () => {
       type: "list",
       name: "myExtensions",
       head: true,
-      sortable: true,
+      sortable: false,
       fields: [
-        { type: "text", name: "id", desc: "Extension ID (32-letters)" },
         { type: "text", name: "name", desc: "Friendly display name" },
+        { type: "text", name: "id", desc: "Extension ID (32-letters)" },
+        { type: "text", name: "url", desc: "The Chrome Web Store URL" },
       ],
     },
   ]);
@@ -49,7 +50,7 @@ const setup = () => {
       desc: "",
       type: "select",
       options: ["15 minutes", "1 hour", "24 hours"],
-      default: "15 minutes",
+      default: "1 hour",
     },
     { type: "h3", desc: "Badge Notifications" },
     {
@@ -57,7 +58,6 @@ const setup = () => {
       desc: "",
       type: "object",
       options: [
-        { name: "new_rating", desc: "New Rating" },
         { name: "new_review", desc: "New Review", default: true },
         { name: "new_support", desc: "New Support Entry", default: true },
       ],
@@ -68,7 +68,6 @@ const setup = () => {
       desc: "",
       type: "object",
       options: [
-        { name: "new_rating", desc: "New Rating" },
         { name: "new_review", desc: "New Review", default: true },
         { name: "new_support", desc: "New Support Entry", default: true },
       ],

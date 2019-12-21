@@ -21,6 +21,6 @@
     "scripts": ["background.js"],
     "persistent": false
   },
-  "permissions": ["alarms", "storage"],
+  "permissions": ["alarms", "storage", "tabs"],
   "web_accessible_resources": ["images/*", "css/*", "icons/*"]
 }
