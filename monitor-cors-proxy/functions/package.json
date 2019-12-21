@@ -1,0 +1,38 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('pnpm') === -1) { console.log('\u001b[31mPlease use pnpm for installing\u001b[0m'); process.exit(1); }\"",
+    "start": "pnpm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "keywords": [
+    "chrome extension",
+    "chrome",
+    "extension",
+    "google chrome",
+    "chrome web store",
+    "web extension"
+  ],
+  "author": "Mike Crowe <drmikecrowe@gmail.com>, based on work by Chris Schmich <schmch@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/drmikecrowe/chrome-extension-alerts/issues"
+  },
+  "homepage": "https://github.com/drmikecrowe/chrome-extension-alerts#readme",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "firebase-admin": "^8.8.0",
+    "firebase-functions": "^3.3.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^0.1.7"
+  },
+  "private": true
+}
