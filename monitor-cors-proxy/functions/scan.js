@@ -1,7 +1,9 @@
+// From https://github.com/schmich/chrome-extension-alerts/blob/master/src/scan.js
+
 const vm = require("vm");
 const axios = require("axios");
 
-async function jsonpExtensionThreads(extensionId) {
+async function jsonpExtensionThreads(extensionId, reviewStart = "0", supportStart = "0") {
   const req = {
     appId: 94,
     version: "150922",
@@ -12,8 +14,8 @@ async function jsonpExtensionThreads(extensionId) {
         url: `http://chrome.google.com/extensions/permalink?id=${extensionId}`,
         groups: "chrome_webstore",
         sortby: "date",
-        startindex: "0",
-        numresults: "25",
+        startIndex: reviewStart,
+        numresults: "100",
         id: "0", // Top-level response key.
       },
       {
@@ -21,8 +23,8 @@ async function jsonpExtensionThreads(extensionId) {
         url: `http://chrome.google.com/extensions/permalink?id=${extensionId}`,
         groups: "chrome_webstore_support",
         sortby: "date",
-        startindex: "0",
-        numresults: "25",
+        startindex: supportStart,
+        numresults: "100",
         id: "1", // Top-level response key.
       },
     ],
@@ -79,7 +81,7 @@ function reviewFromAnnotation(annotation) {
     author: authorFromAnnotation(annotation),
     comment: annotation.comment,
     rating: annotation.starRating,
-    createdAt: annotation.creationTimestamp,
+    createdAt: annotation.creationTimestamp || annotation.timestamp,
   };
 }
 
@@ -89,7 +91,7 @@ function issueFromAnnotation(annotation) {
     title: annotation.title,
     comment: annotation.comment,
     type: (annotation.attributes.sfrAttributes.issueType || "").toLowerCase(),
-    createdAt: annotation.timestamp,
+    createdAt: annotation.creationTimestamp || annotation.timestamp,
   };
 }
 
@@ -103,15 +105,21 @@ async function fetchExtensionThreads(extensionId) {
   return { reviews, issues };
 }
 
-async function fetchNewPosts(extensionId, last) {
+async function fetchNewPosts(extensionId, last, qty) {
   let { reviews, issues } = await fetchExtensionThreads(extensionId);
 
   let reviewsLast = last.reviews || 0;
   let issuesLast = last.issues || 0;
 
-  let newReviews = reviews.filter(r => r.createdAt > reviewsLast).sort((p, q) => p.createdAt - q.createdAt);
+  let newReviews = reviews
+    .filter(r => r.createdAt > reviewsLast)
+    .sort((p, q) => q.createdAt - p.createdAt)
+    .slice(0, qty);
 
-  let newIssues = issues.filter(i => i.createdAt > issuesLast).sort((p, q) => p.createdAt - q.createdAt);
+  let newIssues = issues
+    .filter(i => i.createdAt > issuesLast)
+    .sort((p, q) => q.createdAt - p.createdAt)
+    .slice(0, qty);
 
   if (newReviews.length) {
     last.reviews = newReviews[newReviews.length - 1].createdAt;
@@ -128,10 +136,11 @@ async function fetchNewPosts(extensionId, last) {
   };
 }
 
-async function scan(id, last_reviews, last_issues) {
+async function scan(id, last_reviews, last_issues, returnQty) {
   const last = { reviews: last_reviews || 0, issues: last_issues || 0 };
+  const qty = returnQty || 25;
 
-  const results = await fetchNewPosts(id, last);
+  const results = await fetchNewPosts(id, last, qty);
   const { reviews, issues } = results;
 
   console.log(`Scanned ${id} and found ${reviews.length} new reviews, and ${issues.length} new issues`);

@@ -60,6 +60,20 @@ module.exports = {
         loader: "file-loader?name=[name].[ext]",
         exclude: /node_modules/,
       },
+      {
+        test: /\.md$/,
+        use: [
+          {
+            loader: "html-loader",
+          },
+          {
+            loader: "markdown-loader",
+            options: {
+              /* your options here */
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {

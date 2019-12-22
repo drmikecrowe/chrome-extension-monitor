@@ -49,7 +49,7 @@ devDependencies:
   friendly-errors-webpack-plugin: 1.7.0_webpack@4.41.3
   html-loader: 0.5.5
   html-webpack-plugin: 3.2.0_webpack@4.41.3
-  markdown-to-html: 0.0.13
+  markdown-loader: 5.1.0
   minimist: 1.2.0
   postcss-loader: 3.0.0
   prettier: 1.19.1
@@ -2085,12 +2085,6 @@ packages:
     optional: true
     resolution:
       integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
-  /bl/0.4.2:
-    dependencies:
-      readable-stream: 1.0.34
-    dev: true
-    resolution:
-      integrity: sha1-XbMdcvA4xU5orcOVeBJf47Ct3JY=
   /bl/3.0.0:
     dependencies:
       readable-stream: 3.4.0
@@ -4661,10 +4655,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-Xv+OPmhNVprkyysSgmBOi6YhSfo=
-  /gfm-linkify/0.1.0:
-    dev: true
-    resolution:
-      integrity: sha1-aGfMPnT8YY87FOdDGPjVkKAIVzs=
   /glob-parent/3.1.0:
     dependencies:
       is-glob: 3.1.0
@@ -5695,10 +5685,6 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-HxbkqiKwTRM2tmGIpmrzxgDDpm0=
-  /isarray/0.0.1:
-    dev: true
-    resolution:
-      integrity: sha1-ihis/Kmo9Bd+Cav8YDiTmwXR7t8=
   /isarray/1.0.0:
     dev: true
     resolution:
@@ -6138,26 +6124,20 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
-  /markdown-to-html/0.0.13:
+  /markdown-loader/5.1.0:
     dependencies:
-      gfm-linkify: 0.1.0
-      marked: 0.3.19
-      open: 0.0.5
-      pygmentize-bundled: 2.3.0
-      request: 2.88.0
-      tmp: 0.0.24
-      yargs: 1.3.3
+      loader-utils: 1.2.3
+      marked: 0.7.0
     dev: true
-    hasBin: true
     resolution:
-      integrity: sha1-ADRndZ24sxmwbB2fCSBy60QXf00=
-  /marked/0.3.19:
+      integrity: sha512-xtQNozLEL+55ZSPTNwro8epZqf1h7HjAZd/69zNe8lbckDiGVHeLQm849bXzocln2pwRK2A/GrW/7MAmwjcFog==
+  /marked/0.7.0:
     dev: true
     engines:
       node: '>=0.10.0'
     hasBin: true
     resolution:
-      integrity: sha512-ea2eGWOqNxPcXv8dyERdSr/6FmzvWwzjMxpfGB/sbMccXoct+xY+YukPD+QTUZwyvK7BZwcr4m21WBOW41pAkg==
+      integrity: sha512-c+yYdCZJQrsRjTPhUx7VKkApw9bwDkNbHUKo1ovgcfDjb2kc8rLuRbIFyXL5WOEUwzSSKo3IXpph2K6DqB/KZg==
   /matcher/2.1.0:
     dependencies:
       escape-string-regexp: 2.0.0
@@ -6722,10 +6702,6 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-Epah+btZd5wrrfjkJZq1AOB9O6OxUQto45hzFd7lXGrpHPGE0W1k+426yrZV+k6NJOzLNNW/nVsmZdIWsAqoOQ==
-  /object-keys/0.4.0:
-    dev: true
-    resolution:
-      integrity: sha1-KKaq50KN0sOpLz2V8hM13SBOAzY=
   /object-keys/1.1.1:
     dev: true
     engines:
@@ -6829,12 +6805,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-5NcSkPHhwTVFIQN+TUqXoS5+dlElHXdpAWu9I0HP20YOtIi+aZ0Ct82jdlILDxjLEAWwvm+qj1m6aEtsDVmm6Q==
-  /open/0.0.5:
-    dev: true
-    engines:
-      node: '>= 0.6.0'
-    resolution:
-      integrity: sha1-QsPhjslUZra/DcQvOilFw/DK2Pw=
   /open/6.4.0:
     dependencies:
       is-wsl: 1.1.0
@@ -7828,14 +7798,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
-  /pygmentize-bundled/2.3.0:
-    dependencies:
-      bl: 0.4.2
-      through2: 0.2.3
-    deprecated: no longer maintained
-    dev: true
-    resolution:
-      integrity: sha1-1CXe2o0TaXW5M+3jYxNfYjNQgUo=
   /q/1.5.1:
     dev: true
     engines:
@@ -7921,24 +7883,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-Ug69mNOpfvKDAc2Q8DRpMjjzdtrnv9HcSMX+4VsZxD1aZ6ZzrIE7rlzXBtWTyhULSMKg076AW6WR5iZpD0JiOg==
-  /readable-stream/1.0.34:
-    dependencies:
-      core-util-is: 1.0.2
-      inherits: 2.0.4
-      isarray: 0.0.1
-      string_decoder: 0.10.31
-    dev: true
-    resolution:
-      integrity: sha1-Elgg40vIQtLyqq+v5MKRbuMsFXw=
-  /readable-stream/1.1.14:
-    dependencies:
-      core-util-is: 1.0.2
-      inherits: 2.0.4
-      isarray: 0.0.1
-      string_decoder: 0.10.31
-    dev: true
-    resolution:
-      integrity: sha1-fPTFTvZI44EwhMY23SB54WbAgdk=
   /readable-stream/2.3.6:
     dependencies:
       core-util-is: 1.0.2
@@ -8353,6 +8297,13 @@ packages:
       node-sass: ^4.0.0
       sass: ^1.3.0
       webpack: ^4.36.0
+    peerDependenciesMeta:
+      fibers:
+        optional: true
+      node-sass:
+        optional: true
+      sass:
+        optional: true
     resolution:
       integrity: sha512-+qeMu563PN7rPdit2+n5uuYVR0SSVwm0JsOUsaJXzgYcClWSlmX0iHDnmeOobPkf5kUglVot3QS6SyLyaQoJ4w==
   /sax/1.2.4:
@@ -8959,10 +8910,6 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-qFvWL3/+QIgZXVmJBfpHmxLB7xsUXz6HsUmP8+5dRaC3Q7oKUv9Vo6aMCRZC1smrtyECFsIT30PqBJ1gTjAs+g==
-  /string_decoder/0.10.31:
-    dev: true
-    resolution:
-      integrity: sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ=
   /string_decoder/1.1.1:
     dependencies:
       safe-buffer: 5.1.2
@@ -9252,13 +9199,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
-  /through2/0.2.3:
-    dependencies:
-      readable-stream: 1.1.14
-      xtend: 2.1.2
-    dev: true
-    resolution:
-      integrity: sha1-6zKE2k6jEbbMis42U3SKUqvyWj8=
   /through2/2.0.5:
     dependencies:
       readable-stream: 2.3.6
@@ -9282,12 +9222,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
-  /tmp/0.0.24:
-    dev: true
-    engines:
-      node: '>=0.4.0'
-    resolution:
-      integrity: sha1-1qXhmNFKmDXMby18PZ4wJCjIzxI=
   /tmp/0.0.33:
     dependencies:
       os-tmpdir: 1.0.2
@@ -10283,14 +10217,6 @@ packages:
       node: '>=0.4.0'
     resolution:
       integrity: sha1-wodrBhaKrcQOV9l+gRkayPQ5iz4=
-  /xtend/2.1.2:
-    dependencies:
-      object-keys: 0.4.0
-    dev: true
-    engines:
-      node: '>=0.4'
-    resolution:
-      integrity: sha1-bv7MKk2tjmlixJAbM3znuoe10os=
   /xtend/4.0.2:
     dev: true
     engines:
@@ -10334,10 +10260,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-H/V41UNZQPkUMIT5h5hiwg4QKIY1RPvoBV4XcjUbRM8Bk2oKqqyZ0DIEbTFZB0XjbtSPG8SAa/0DxCQmiRgzKg==
-  /yargs/1.3.3:
-    dev: true
-    resolution:
-      integrity: sha1-BU3oth8i7v23IHBZ6u+da4P7kxo=
   /yargs/12.0.5:
     dependencies:
       cliui: 4.1.0
@@ -10463,7 +10385,7 @@ specifiers:
   html-loader: ^0.5.5
   html-webpack-plugin: ^3.2.0
   lodash: ^4.17.15
-  markdown-to-html: 0.0.13
+  markdown-loader: ^5.1.0
   minimist: ^1.2.0
   postcss-loader: ^3.0.0
   prettier: ^1.19.1

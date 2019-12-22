@@ -10,7 +10,7 @@
         </router-link>
         <a :href="webUrl" target="_blank" title="Web Store" class="w-full">
           <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r w-full">
-            Extension Page in Web Store
+            Developer Support Page
             <font-awesome-icon icon="external-link-square-alt" size="lg" />
           </button>
         </a>
@@ -67,17 +67,18 @@ export default class Issues extends Vue {
   list: any[] = [];
 
   data() {
+    const id = get(this, "$router.currentRoute.query.id");
     this.loadIssues();
     return {
-      webUrl: get(this, "$router.currentRoute.query.url", "#"),
+      webUrl: `https://chrome.google.com/webstore/developer/support/${id}?hl=en`,
       list: [],
     };
   }
 
   async loadIssues() {
     const id: string = get(this, "$router.currentRoute.query.id");
-    getStorage("details").then((data: IScanResults[]) => {
-      if (!data || !id) return;
+    getStorage("details", []).then((data: IScanResults[]) => {
+      if (!data || !id || data.length === 0) return;
       log("all details", data);
       const item: IScanResults | undefined = find(data, (o: IScanResults) => o.id === id);
       if (item) {

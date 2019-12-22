@@ -76,8 +76,8 @@ export default class Reviews extends Vue {
 
   async loadReviews() {
     const id: string = get(this, "$router.currentRoute.query.id");
-    getStorage("details").then((data: IScanResults[]) => {
-      if (!data || !id) return;
+    getStorage("details", []).then((data: IScanResults[]) => {
+      if (!data || !id || data.length === 0) return;
       log("all details", data);
       const item: IScanResults | undefined = find(data, (o: IScanResults) => o.id === id);
       if (item) {

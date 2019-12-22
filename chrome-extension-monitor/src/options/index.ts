@@ -1,12 +1,14 @@
-import debug from "debug";
-import { ReleaseNotes } from "./ReleaseNotes";
-import { Documentation } from "./Documentation";
+import { isDevMode } from "@/utils";
+const ReleaseNotes = require("./documentation/ReleaseNotes.md");
+const Documentation = require("./documentation/Documentation.md");
+const About = require("./documentation/About.md");
+const Donate = require("./documentation/Donate.md");
 
 require("chrome-options/dist/main.min.js");
 
 require("./custom.css");
 
-const log = debug("mbfc:options");
+const log = require("debug")("mbfc:options");
 
 const setup = () => {
   const chromeOptions = (chrome as any).options;
@@ -19,7 +21,7 @@ const setup = () => {
 
   chromeOptions.opts.title = "Section";
 
-  chromeOptions.opts.about = '<p>This extension is open-source, and is based here: <a href="https://github.com/drmikecrowe/chrome-extension-monitor">Github Project Page</a></p>';
+  chromeOptions.opts.about = About;
 
   chromeOptions.addTab("Documentation", [
     {
@@ -43,28 +45,20 @@ const setup = () => {
     },
   ]);
 
+  const pollTimes = ["15 minutes", "1 hour", "24 hours"];
+  if (isDevMode()) pollTimes.unshift("2 minutes");
   chromeOptions.addTab("Notifications", "", [
     { type: "h3", desc: "Check Frequency" },
     {
       name: "frequency",
       desc: "",
       type: "select",
-      options: ["15 minutes", "1 hour", "24 hours"],
+      options: pollTimes,
       default: "1 hour",
     },
     { type: "h3", desc: "Badge Notifications" },
     {
       name: "badge",
-      desc: "",
-      type: "object",
-      options: [
-        { name: "new_review", desc: "New Review", default: true },
-        { name: "new_support", desc: "New Support Entry", default: true },
-      ],
-    },
-    { type: "h3", desc: "Desktop Notifications" },
-    {
-      name: "desktop",
       desc: "",
       type: "object",
       options: [
@@ -84,13 +78,7 @@ const setup = () => {
   chromeOptions.addTab("Donate", [
     {
       type: "html",
-      html:
-        "<p>We would greatly appreciate any donations you are willing to give (especially recurring ones!). &nbsp;Maintaining this extension and adding new features takes a fair amount of time, and donations help encourage more benefits and features.</p>" +
-        "<p>You can donate in multiple ways:</p>" +
-        "<ul>" +
-        '<li>Via <a href="https://paypal.me/drmikecrowe" target="_blank">PayPal</a></li>' +
-        '<li>Via <a href="https://www.patreon.com/solvedbymike" target="_blank">Patreon</a></li>' +
-        "</ul>  ",
+      html: Donate,
     },
   ]);
 };

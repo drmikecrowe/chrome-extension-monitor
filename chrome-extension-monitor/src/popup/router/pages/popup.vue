@@ -1,18 +1,25 @@
 <template>
   <div class="container mx-auto p-2 centered">
-    <t-card v-if="current" :data="current">
-      Add {{ current["name"] }} to your monitor list?
-      <a href="#" title="Add to monitor list"><t-button v-on:click="add" size="" variant="success" class="py-1 px-2">Add</t-button></a>
-    </t-card>
-    <div class="pt-1 flex items-center">
-      <div class="flex-auto content-left bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-1" role="alert">
-        <p class="text-xs">
-          <font-awesome-icon icon="battery-quarter" /> Please consider donating just $1/mo. Each {{ pollsPerDay ? "of your " + pollsPerDay + " checks/day" : "checks" }} goes thru
-          our servers and incurs a tiny cost...
-        </p>
+    <div class="absolute top-0 right-0">
+      <div class="p-1">
+        <a href="#" @click="options" title="Configuration"><font-awesome-icon class="float-right" icon="cog"/></a>
       </div>
-      <div class="flex-auto content-right">
-        <a href="#" title="Configuration"><font-awesome-icon v-on:click="options" class="float-right" icon="cog"/></a>
+    </div>
+    <div v-if="current" :data="current" class="p-3">
+      <a href="#" @click="add" title="Add to monitor list">
+        <t-button size="sm" variant="success">
+          <font-awesome-icon icon="plus-circle" size="xs" />
+          <span class="pl-2 text-xs">Add {{ current["name"] }} to your monitor list</span>
+        </t-button>
+      </a>
+    </div>
+    <div class="pt-1 px-4 flex items-center">
+      <div class="flex-auto bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-1" role="alert">
+        <p class="text-xs">
+          <font-awesome-icon icon="battery-quarter" />
+          Please consider <a class="underline font-bold" href="https://www.patreon.com/bePatron?u=3955610" target="_blank">donating</a> just $1/mo. Each
+          {{ pollsPerDay ? "of your " + pollsPerDay + " checks/day" : "checks" }} incurs a tiny cost...
+        </p>
       </div>
     </div>
     <div class="clearfix"></div>
@@ -46,7 +53,9 @@
                 {{ row.reviews.length }}
                 <font-awesome-icon icon="angle-double-right" size="lg" />
               </router-link>
-              <span v-if="!row.reviews.length" class="px-3">0</span>
+              <span v-if="!row.reviews.length" class="px-3"
+                >0 <a v-if="!row.reviews.length && !row.issues.length && !polling" href="#" @click="refresh(row)" title="Reload next poll"><font-awesome-icon icon="recycle"/></a
+              ></span>
             </td>
             <td :class="tdClass">
               <a href="#" v-if="row.issues.length || row.reviews.length" @click="clear(row)" class="px-3" title="Clear"><font-awesome-icon icon="check" size="lg"/></a>
@@ -56,11 +65,13 @@
       </t-table>
     </div>
     <div class="p-2">
-      <span class="absolute bottom-0 left-0 p-2">
-        <button size="sm" class="patreon text-white t-button t-button-size-sm rounded-full border block inline-flex items-center justify-center px-2 py-1 text-sm ">
-          <font-awesome-icon :icon="['fab', 'patreon']" size="xs" />
-          <a class="pl-2 text-xs" href="https://www.patreon.com/bePatron?u=3955610" target="_blank">Become a Patron!</a>
-        </button>
+      <span class="absolute bottom-0 left-0 p-2 text-xs">
+        <a href="https://www.patreon.com/bePatron?u=3955610" target="_blank">
+          <button size="sm" class="patreon text-white t-button t-button-size-sm rounded-full border block inline-flex items-center justify-center px-2 py-1 text-sm ">
+            <font-awesome-icon :icon="['fab', 'patreon']" size="xs" />
+            <span class="pl-2 text-xs">Become a Patron!</span>
+          </button>
+        </a>
       </span>
       <span class="absolute bottom-0 right-0 px-2 shadow font-sans text-xs">As of: {{ lastRun | date }}</span>
     </div>
@@ -77,50 +88,62 @@ import { IScanResults, ICurrent } from "@/types";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faPatreon } from "@fortawesome/free-brands-svg-icons";
-import { faExclamationCircle, faCheck, faAngleDoubleRight, faExternalLinkSquareAlt, faCog, faBatteryQuarter } from "@fortawesome/free-solid-svg-icons";
+import { faExclamationCircle, faCheck, faAngleDoubleRight, faExternalLinkSquareAlt, faCog, faBatteryQuarter, faPlusCircle, faRecycle } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faExclamationCircle, faCheck, faAngleDoubleRight, faExternalLinkSquareAlt, faCog, faBatteryQuarter, faPatreon);
+library.add(faExclamationCircle, faCheck, faAngleDoubleRight, faExternalLinkSquareAlt, faCog, faBatteryQuarter, faPatreon, faPlusCircle, faRecycle);
 
 const log = require("debug")("mbfc:popup");
 
 @Component
-export default class Issues extends Vue {
+export default class Popup extends Vue {
   current: ICurrent | null = null;
   details: IScanResults[] = [];
   lastRun: number = 0;
   pollsPerDay: number = 0;
+  polling: boolean = false;
 
   data() {
-    Promise.all([getStorage("details"), getStorage("lastRun"), getSettings(), getMinutes()]).then(results => {
-      let [data, lastRun, settings, minutes] = results;
-      let extensions = settings["extensions.myExtensions"].length;
-      this.pollsPerDay = Math.round((extensions * 3600) / minutes);
-      if (data) {
-        log("all details", data);
-        this.details = data || [];
-        const ids = data.map(detail => detail.id);
-        log("ids we are tracking", ids);
-        this.getWebstoreInfo(ids).then(data => {
-          log("chrome webstore info", data);
-          this.current = data;
-        });
-      }
-      if (lastRun) {
-        this.lastRun = lastRun;
-      }
+    this.updateData().then(() => {
+      log(`Updated data`);
     });
     return {
+      pollsPerDay: 0,
+      lastRun: 0,
       current: null,
       details: [],
+      polling: false,
     };
+  }
+
+  async updateData() {
+    const [storedDetails, lastRun, settings, minutes] = await Promise.all([getStorage("details", []), getStorage("lastRun", 0), getSettings(), getMinutes()]);
+    const myExtensions = settings["extensions.myExtensions"];
+    log("myExtensions", myExtensions);
+    let ids: string[] = [];
+    if (myExtensions && myExtensions.length > 0) {
+      let extensions = myExtensions.length;
+      this.pollsPerDay = Math.round((extensions * 3600) / minutes);
+      ids = myExtensions.map(detail => detail.id);
+      log("ids we are tracking", ids);
+      if (storedDetails && storedDetails.length > 0) {
+        log("all details", storedDetails);
+        this.details = storedDetails || [];
+      }
+    }
+    this.current = await this.getWebstoreInfo(ids);
+    if (lastRun) {
+      this.lastRun = lastRun;
+    }
   }
 
   async getWebstoreInfo(ids): Promise<ICurrent | null> {
     const tab = await chromep.tabs.getSelected();
     if (!tab) return null;
     const { url, title } = tab;
+    log(url, title);
     if (!url || !title) return null;
     const parts = /([a-z]{32})/.exec(url);
+    log(parts);
     if (!parts) return null;
     if (url.startsWith("https://chrome.google.com/webstore") && parts.length > 1) {
       const id = parts[1];
@@ -135,20 +158,26 @@ export default class Issues extends Vue {
     return null;
   }
 
-  async add(item) {
+  async add() {
     log("adding to our tracker", this.current);
     const settings = await getSettings();
     const myIds = get(settings, "extensions.myExtensions", []);
     myIds.push(this.current);
+    this.details.push({
+      issues: [],
+      reviews: [],
+      ...(this.current as any),
+    });
+    this.current = null;
     await chromep.storage.sync.set({ "extensions.myExtensions": myIds });
   }
 
   async clear(row: IScanResults) {
     const { id } = row;
-    const [stats, details] = await Promise.all([getSettings("stats"), getStorage("details")]);
+    const [stats, details] = await Promise.all([getSettings("stats"), getStorage("details", [])]);
     stats[id] = {
-      reviews: new Date().getTime(),
-      issues: new Date().getTime(),
+      reviews: Math.round(new Date().getTime() / 1000),
+      issues: Math.round(new Date().getTime() / 1000),
     };
     log(stats);
     for (let detail of details) {
@@ -159,6 +188,26 @@ export default class Issues extends Vue {
     }
     this.details = details;
     await Promise.all([chromep.storage.local.set({ details: this.details }), await chromep.storage.sync.set({ stats })]);
+  }
+
+  async refresh(row: IScanResults) {
+    const { id } = row;
+    const [stats, details] = await Promise.all([getSettings("stats"), getStorage("details", [])]);
+    stats[id] = {
+      reviews: 0,
+      issues: 0,
+    };
+    log(stats);
+    for (let detail of details) {
+      if (detail.id === id) {
+        detail.reviews = [];
+        detail.issues = [];
+      }
+    }
+    this.details = details;
+    await Promise.all([chromep.storage.local.set({ details: this.details }), await chromep.storage.sync.set({ stats })]);
+    this.polling = true;
+    chrome.runtime.sendMessage({ type: "refresh" });
   }
 
   async options() {

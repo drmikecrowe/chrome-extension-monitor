@@ -13,7 +13,3 @@ You can add extension from this options menu, but the easiest method is to navig
 ## Check Frequency
 
 By default, the extension polls every 1h for updates on your extensions. You can do it more frequently (15 minutes), but I ask that you only use this high frequecy for extensions that need this level of responsiveness.
-
-## Icons
-
-- Icons made by [DinosoftLabs](https://www.flaticon.com/authors/dinosoftlabs) from [Flaticon](https://www.flaticon.com/)
