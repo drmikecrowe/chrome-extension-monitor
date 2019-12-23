@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import get from "lodash/get";
 
 export default value => {
   const date = new Date(value * 1000);

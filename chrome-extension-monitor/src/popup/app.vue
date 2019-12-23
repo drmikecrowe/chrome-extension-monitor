@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="popup">
     <router-view></router-view>
   </div>
 </template>
@@ -11,3 +11,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.popup {
+  width: 785px;
+  height: 585px;
+}
+</style>

@@ -1,7 +1,7 @@
 import chromep from "chrome-promise";
 import debug from "debug";
 import { scan } from "./scanner";
-import { get } from "lodash";
+import get from "lodash/get";
 import { IScanResults } from "@/types";
 import date from "@/filters/date";
 import { getSettings, getStorage, getMinutes, isDevMode } from "@/utils";
@@ -126,11 +126,12 @@ async function startRequest() {
   await pollExtensions();
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   debug(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
   if (request.type == "refresh") {
     log(`Manual Refresh fired.`);
-    pollExtensions();
+    pollExtensions().then(() => sendResponse());
+    return true;
   }
 });
 

@@ -5,12 +5,14 @@
         <a href="#" @click="options" title="Configuration"><font-awesome-icon class="float-right" icon="cog"/></a>
       </div>
     </div>
-    <div v-if="current" :data="current" class="p-3">
+    <div v-if="current" class="p-3">
       <a href="#" @click="add" title="Add to monitor list">
-        <t-button size="sm" variant="success">
+        <button
+          class="t-button t-button-size-sm border block rounded inline-flex items-center justify-center px-4 py-2 text-sm text-white bg-green-500 border-green-500 hover:bg-green-600 hover:border-green-600"
+        >
           <font-awesome-icon icon="plus-circle" size="xs" />
           <span class="pl-2 text-xs">Add {{ current["name"] }} to your monitor list</span>
-        </t-button>
+        </button>
       </a>
     </div>
     <div class="pt-1 px-4 flex items-center">
@@ -22,6 +24,7 @@
         </p>
       </div>
     </div>
+
     <div class="clearfix"></div>
     <div class="pt-3">
       <t-table
@@ -63,6 +66,12 @@
           </tr>
         </template>
       </t-table>
+      <div v-if="!current && details.length === 0">
+        <p class="p-6">
+          Navigate to your extension in the <a href="https://chrome.google.com/webstore/category/extensions" class="text-blue-600 visited:text-purple-600">Chrome Web Store</a> and
+          click the icon again to add your extension...
+        </p>
+      </div>
     </div>
     <div class="p-2">
       <span class="absolute bottom-0 left-0 p-2 text-xs">
@@ -170,6 +179,13 @@ export default class Popup extends Vue {
     });
     this.current = null;
     await chromep.storage.sync.set({ "extensions.myExtensions": myIds });
+    await this.backgroundUpdate();
+  }
+
+  async backgroundUpdate() {
+    chrome.runtime.sendMessage({ type: "refresh" }, async response => {
+      await this.updateData();
+    });
   }
 
   async clear(row: IScanResults) {
@@ -180,14 +196,8 @@ export default class Popup extends Vue {
       issues: Math.round(new Date().getTime() / 1000),
     };
     log(stats);
-    for (let detail of details) {
-      if (detail.id === id) {
-        detail.reviews = [];
-        detail.issues = [];
-      }
-    }
-    this.details = details;
     await Promise.all([chromep.storage.local.set({ details: this.details }), await chromep.storage.sync.set({ stats })]);
+    await this.backgroundUpdate();
   }
 
   async refresh(row: IScanResults) {
@@ -207,7 +217,7 @@ export default class Popup extends Vue {
     this.details = details;
     await Promise.all([chromep.storage.local.set({ details: this.details }), await chromep.storage.sync.set({ stats })]);
     this.polling = true;
-    chrome.runtime.sendMessage({ type: "refresh" });
+    await this.backgroundUpdate();
   }
 
   async options() {

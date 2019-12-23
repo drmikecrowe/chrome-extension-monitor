@@ -7,7 +7,7 @@
 
 import axios from "axios";
 import debug from "debug";
-import { defaults } from "lodash";
+import defaults from "lodash/defaults";
 import { IStat, IScanResults } from "@/types";
 
 const log = debug("mbfc:background");

@@ -1,6 +1,9 @@
-@import "~tailwindcss/dist/base.css";
-@import "~tailwindcss/dist/components.css";
-@import "~tailwindcss/dist/utilities.css";
+/* purgecss start ignore */
+@tailwind base;
+@tailwind components;
+/* purgecss end ignore */
+
+@tailwind utilities;
 
 body {
   width: 785px;

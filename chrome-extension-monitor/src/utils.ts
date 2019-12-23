@@ -1,5 +1,5 @@
 import chromep from "chrome-promise";
-import { get } from "lodash";
+import get from "lodash/get";
 
 const log = require("debug")("mbfc:utils");
 
@@ -23,9 +23,9 @@ export async function getStorage(item: string | null = null, deflt: any = {}) {
 
 export async function getMinutes(): Promise<number> {
   const settings = await getSettings();
-  let minutes = 0;
+  let minutes = 60;
   const frequency = settings["notifications.frequency"];
-  if (!frequency || frequency.indexOf(" ") === -1) return 0;
+  if (!frequency || frequency.indexOf(" ") === -1) return minutes;
   const parts = frequency.split(" ");
   minutes = parseInt(parts[0]);
   switch (parts[1]) {
@@ -37,6 +37,7 @@ export async function getMinutes(): Promise<number> {
       minutes = minutes * 60;
       break;
   }
+  if (minutes < 15) minutes = 60;
   return minutes;
 }
 

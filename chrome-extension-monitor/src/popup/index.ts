@@ -14,12 +14,11 @@ global.browser = require("webextension-polyfill");
 Vue.prototype.$browser = global.browser;
 //@ts-ignore
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import VueTailwind from "vue-tailwind";
 import DateFilter from "@/filters/date"; // Import date
 
 import MyOwnTheme from "./theme";
 
-const styles = require("./app.css");
+require("./app.css");
 
 Vue.filter("date", DateFilter);
 
@@ -27,7 +26,14 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
-Vue.use(VueTailwind, {
+// import VueTailwind from "vue-tailwind";
+// Vue.use(VueTailwind, {
+//   theme: MyOwnTheme,
+// });
+
+// import { TTable, TButton } from "vue-tailwind";
+import TTable from "vue-tailwind/src/components/TTable.vue";
+Vue.use(TTable as any, {
   theme: MyOwnTheme,
 });
 

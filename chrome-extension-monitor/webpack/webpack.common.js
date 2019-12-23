@@ -84,6 +84,9 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js", ".vue"],
       }),
     ],
+    alias: {
+      lodash: "lodash-es",
+    },
   },
   plugins: [
     require("tailwindcss"),
