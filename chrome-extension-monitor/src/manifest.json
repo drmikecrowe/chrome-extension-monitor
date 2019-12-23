@@ -1,7 +1,7 @@
 {
   "name": "Chrome Extension Monitor",
   "description": "Chrome Extension Monitor",
-  "version": "1.0",
+  "version": "1.0.0",
   "short_name": "extmonitor",
   "author": "Mike Crowe",
   "manifest_version": 2,
@@ -18,9 +18,20 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
-  "permissions": ["alarms", "storage", "tabs"],
-  "web_accessible_resources": ["images/*", "css/*", "icons/*"]
+  "permissions": [
+    "alarms",
+    "storage",
+    "tabs"
+  ],
+  "web_accessible_resources": [
+    "images/*",
+    "css/*",
+    "icons/*"
+  ],
+  "version_name": "Release 1.0.0"
 }
