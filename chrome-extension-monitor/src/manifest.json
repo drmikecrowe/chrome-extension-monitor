@@ -1,7 +1,7 @@
 {
   "name": "Chrome Extension Monitor",
   "description": "Chrome Extension Monitor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "short_name": "extmonitor",
   "author": "Mike Crowe",
   "manifest_version": 2,
@@ -33,5 +33,5 @@
     "css/*",
     "icons/*"
   ],
-  "version_name": "Release 1.0.0"
+  "version_name": "Release 1.0.1"
 }
