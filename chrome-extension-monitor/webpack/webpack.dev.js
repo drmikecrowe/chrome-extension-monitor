@@ -16,13 +16,23 @@ module.exports = merge(common, {
       },
     }),
   ],
+  output: {
+    devtoolModuleFilenameTemplate: info => {
+      let $filename = "sources://" + info.resourcePath;
+      if ((info.resourcePath.match(/\.vue$/) && !info.query.match(/type=script/)) || `${info.moduleId}` !== ``) {
+        $filename = "webpack-generated:///" + info.resourcePath + "?" + info.hash;
+      }
+      return $filename;
+    },
+    devtoolFallbackModuleFilenameTemplate: "webpack:///[resource-path]?[hash]",
+  },
   resolve: {
     alias: {
       vue$: "vue/dist/vue.esm.js",
     },
   },
   devServer: {
-    stats: "errors-only",
+  stats: "minimal"
     quiet: true,
     watchContentBase: true,
     disableHostCheck: true,

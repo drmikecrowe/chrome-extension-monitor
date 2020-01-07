@@ -23,9 +23,9 @@ const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
   entry: {
-    popup: join(srcDir, "popup/index.ts"),
-    options: join(srcDir, "options/index.ts"),
     background: join(srcDir, "background/index.ts"),
+    options: join(srcDir, "options/index.ts"),
+    popup: join(srcDir, "popup/index.ts"),
   },
   output: {
     path: buildDir,
